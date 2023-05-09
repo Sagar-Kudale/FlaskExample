@@ -1,19 +1,20 @@
-# start by pulling the python image
-FROM python:3.8-alpine
+FROM python:3.8
 
-# copy the requirements file into the image
-COPY ./requirements.txt /app/requirements.txt
+# set a directory for the app
+WORKDIR /usr/src/app
 
-# switch working directory
-WORKDIR /app
+# copy all the files to the container
+COPY . .
 
-# install the dependencies and packages in the requirements file
-RUN pip install -r requirements.txt
+# install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# copy every content from the local file to the image
-COPY . /app
+# define the port number the container should expose
+EXPOSE 8080
 
-# configure the container to run in an executed manner
-ENTRYPOINT [ "python" ]
+# Set the environment variable for Flask to run on 0.0.0.0:8080
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_RUN_PORT=8080
 
-CMD ["app.py" ]
+# Run the command to start the Flask application
+CMD [ "flask", "run" ]
